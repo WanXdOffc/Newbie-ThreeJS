@@ -4,6 +4,8 @@ export const developer = {
   role: 'Frontend engineer & creative developer',
   availability: 'Available for select projects',
   location: 'Brooklyn, NY',
+  contactEmail: 'hello@example.com',
+  githubUsername: 'ryhndastra',
   bio: 'I like my interfaces a little loud and my code a lot thoughtful. I turn curious questions into useful, tactile things for the web.',
   profileImages: [
     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=85',
@@ -83,13 +85,68 @@ export const experience = [
   },
 ]
 
+export const education = [
+  {
+    id: 'parsons',
+    institution: 'Parsons School of Design',
+    qualification: 'BFA, Communication Design',
+    period: '2015 - 2019',
+    detail: 'Focus in interactive systems and creative technology.',
+  },
+]
+
+export const leadership = [
+  {
+    id: 'code-for-neighbors',
+    organization: 'Code for Neighbors',
+    role: 'Volunteer mentor',
+    period: '2022 - NOW',
+    detail: 'Help early-career developers build confidence through practical projects.',
+  },
+  {
+    id: 'design-systems-meetup',
+    organization: 'Design Systems Meetup',
+    role: 'Community organizer',
+    period: '2020 - 2023',
+    detail: 'Hosted monthly conversations between designers and frontend teams.',
+  },
+]
+
+export const certifications = [
+  {
+    id: 'accessible-web',
+    name: 'Accessibility for Web Design',
+    issuer: 'W3C Web Accessibility Initiative',
+    year: '2024',
+  },
+  {
+    id: 'advanced-react',
+    name: 'Advanced React Patterns',
+    issuer: 'Frontend Masters',
+    year: '2023',
+  },
+]
+
+export const skills = [
+  { category: 'Frontend', items: ['React', 'TypeScript', 'JavaScript', 'HTML', 'CSS'] },
+  { category: 'Interaction', items: ['Framer Motion', 'Web Audio', 'Responsive UI'] },
+  { category: 'Workflow', items: ['Git', 'Figma', 'Accessibility', 'Design systems'] },
+]
+
 export const links = [
   { id: 'blog', label: 'Blog', href: 'https://medium.com/', kind: 'writing' },
   { id: 'api', label: 'API', href: 'https://developer.mozilla.org/', kind: 'reference' },
-  { id: 'code-library', label: 'Code Library', href: 'https://github.com/', kind: 'code' },
-  { id: 'github', label: 'GitHub', href: 'https://github.com/', kind: 'social' },
+  { id: 'code-library', label: 'Code Library', href: 'https://github.com/ryhndastra', kind: 'code' },
+  { id: 'github', label: 'GitHub', href: 'https://github.com/ryhndastra', kind: 'social' },
   { id: 'linkedin', label: 'LinkedIn', href: 'https://linkedin.com/', kind: 'social' },
   { id: 'email', label: 'Email', href: 'mailto:hello@example.com', kind: 'contact' },
+]
+
+export const navigation = [
+  { id: 'home', label: 'Home', href: '#home' },
+  { id: 'about', label: 'About', href: '#about' },
+  { id: 'projects', label: 'Projects', href: '#projects' },
+  { id: 'contact', label: 'Contact', href: '#contact' },
 ]
 
 export const albumPhotos = [
@@ -118,17 +175,5 @@ export const albumPhotos = [
     caption: 'Color study no. 04',
   },
 ]
-
-export const githubActivity = Array.from({ length: 52 }, (_, week) =>
-  Array.from({ length: 7 }, (_, day) => {
-    const activity = (week * 5 + day * 11 + (week % 7) * 3 + (day * week) % 11) % 23
-
-    if (activity < 8) return 0
-    if (activity < 12) return 1
-    if (activity < 16) return 2
-    if (activity < 20) return 3
-    return 4
-  }),
-)
 
 export const techStack = ['React', 'TypeScript', 'JavaScript', 'CSS', 'Node.js', 'Figma', 'Motion']
