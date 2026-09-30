@@ -2,6 +2,9 @@ export const developer = {
   name: 'Mara Kim',
   monogram: 'MK',
   role: 'Frontend engineer & creative developer',
+  availability: 'Available for select projects',
+  location: 'Brooklyn, NY',
+  bio: 'I like my interfaces a little loud and my code a lot thoughtful. I turn curious questions into useful, tactile things for the web.',
   profileImages: [
     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=85',
     'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=900&q=85',
@@ -115,5 +118,17 @@ export const albumPhotos = [
     caption: 'Color study no. 04',
   },
 ]
+
+export const githubActivity = Array.from({ length: 52 }, (_, week) =>
+  Array.from({ length: 7 }, (_, day) => {
+    const activity = (week * 5 + day * 11 + (week % 7) * 3 + (day * week) % 11) % 23
+
+    if (activity < 8) return 0
+    if (activity < 12) return 1
+    if (activity < 16) return 2
+    if (activity < 20) return 3
+    return 4
+  }),
+)
 
 export const techStack = ['React', 'TypeScript', 'JavaScript', 'CSS', 'Node.js', 'Figma', 'Motion']
