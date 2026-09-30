@@ -2216,11 +2216,16 @@
 }
 
 .nav-link:hover,
-.nav-link:focus-visible {
+.nav-link:focus-visible,
+.nav-link.is-active {
   transform: translate(2px, 2px);
   box-shadow: 1px 1px 0 var(--outline);
   background: var(--yellow);
   color: #101010;
+}
+
+.nav-link.is-active {
+  box-shadow: 3px 3px 0 var(--outline);
 }
 
 .nav-link:focus-visible,
@@ -4254,10 +4259,18 @@
   width: min(100% - 64px, 1280px);
   min-height: 82px;
   margin-inline: auto;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
   gap: 18px;
+}
+
+.nav-brand {
+  grid-column: 1;
+}
+
+.primary-nav {
+  grid-column: 2;
 }
 
 .contact-section {
@@ -4361,6 +4374,14 @@
   font-weight: 700;
   text-decoration: none;
   transition: transform 120ms ease, background-color 120ms ease;
+}
+
+.contact-socials a svg,
+.footer-links a svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+  color: currentColor;
 }
 
 .contact-socials a:hover {
@@ -4633,34 +4654,40 @@
 }
 
 .github-graph-scroll {
+  width: 100%;
   min-height: 93px;
   margin-top: 2px;
   padding: 7px 2px 10px;
+  overflow: hidden;
 }
 
 .github-graph-layout {
-  gap: 9px;
+  width: 100%;
+  gap: 7px;
 }
 
 .github-day-labels,
 .github-activity-grid {
-  grid-template-rows: repeat(7, 11px);
-  gap: 3px;
+  grid-template-rows: repeat(7, clamp(4px, 0.78vw, 10px));
+  gap: clamp(1px, 0.2vw, 3px);
 }
 
 .github-day-labels {
-  width: 27px;
+  width: 24px;
   font-size: 8px;
-  line-height: 11px;
+  line-height: clamp(4px, 0.78vw, 10px);
 }
 
 .github-activity-grid {
-  grid-template-columns: repeat(var(--week-count, 52), 11px);
+  min-width: 0;
+  flex: 1;
+  grid-template-columns: repeat(var(--week-count, 52), minmax(0, 1fr));
 }
 
 .activity-square {
-  width: 11px;
-  height: 11px;
+  width: auto;
+  height: auto;
+  aspect-ratio: 1;
   border: 1px solid rgb(150 110 50 / 24%);
   border-radius: 3px;
   background: #f7edcd;

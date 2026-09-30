@@ -5,7 +5,7 @@ export const developer = {
   availability: 'Available for select projects',
   location: 'Brooklyn, NY',
   contactEmail: 'hello@example.com',
-  githubUsername: 'ryhndastra',
+  githubUsername: 'WanXdOffc',
   bio: 'I like my interfaces a little loud and my code a lot thoughtful. I turn curious questions into useful, tactile things for the web.',
   profileImages: [
     'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=85',
@@ -136,9 +136,10 @@ export const skills = [
 export const links = [
   { id: 'blog', label: 'Blog', href: 'https://medium.com/', kind: 'writing' },
   { id: 'api', label: 'API', href: 'https://developer.mozilla.org/', kind: 'reference' },
-  { id: 'code-library', label: 'Code Library', href: 'https://github.com/ryhndastra', kind: 'code' },
-  { id: 'github', label: 'GitHub', href: 'https://github.com/ryhndastra', kind: 'social' },
+  { id: 'code-library', label: 'Code Library', href: 'https://github.com/WanXdOffc', kind: 'code' },
+  { id: 'github', label: 'GitHub', href: 'https://github.com/WanXdOffc', kind: 'social' },
   { id: 'linkedin', label: 'LinkedIn', href: 'https://linkedin.com/', kind: 'social' },
+  { id: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/', kind: 'social' },
   { id: 'email', label: 'Email', href: 'mailto:hello@example.com', kind: 'contact' },
 ]
 

@@ -15,6 +15,23 @@ import {
 import './App.css'
 
 const interactiveElements = 'a, button, [role="button"]'
+
+function SocialIcon({ name }) {
+  if (name === 'github') {
+    return <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .9a11.1 11.1 0 0 0-3.51 21.63c.55.1.76-.24.76-.53v-2.08c-3.1.67-3.76-1.32-3.76-1.32-.5-1.28-1.23-1.62-1.23-1.62-1-.69.08-.68.08-.68 1.1.08 1.68 1.13 1.68 1.13.98 1.67 2.57 1.19 3.2.91.1-.71.38-1.2.7-1.48-2.48-.28-5.1-1.24-5.1-5.53 0-1.22.44-2.22 1.13-3-.12-.28-.49-1.42.1-2.96 0 0 .92-.3 3.05 1.15a10.6 10.6 0 0 1 5.55 0c2.12-1.44 3.04-1.15 3.04-1.15.6 1.54.22 2.68.11 2.96.7.78 1.12 1.78 1.12 3.01 0 4.3-2.62 5.24-5.12 5.51.4.35.75 1.03.75 2.08V22c0 .3.2.64.77.53A11.1 11.1 0 0 0 12 .9Z" /></svg>
+  }
+
+  if (name === 'linkedin') {
+    return <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M5.2 3.4a2.2 2.2 0 1 1 0 4.4 2.2 2.2 0 0 1 0-4.4ZM3.3 9.5h3.8v11.2H3.3V9.5Zm6.1 0H13v1.5h.05a4.1 4.1 0 0 1 3.7-2c4 0 4.7 2.6 4.7 5.9v5.8h-3.8v-5.2c0-1.25-.02-2.85-1.74-2.85-1.74 0-2 1.36-2 2.76v5.29H9.4V9.5Z" /></svg>
+  }
+
+  if (name === 'instagram') {
+    return <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7.2 2.5h9.6a4.7 4.7 0 0 1 4.7 4.7v9.6a4.7 4.7 0 0 1-4.7 4.7H7.2a4.7 4.7 0 0 1-4.7-4.7V7.2a4.7 4.7 0 0 1 4.7-4.7Zm0 1.8a2.9 2.9 0 0 0-2.9 2.9v9.6a2.9 2.9 0 0 0 2.9 2.9h9.6a2.9 2.9 0 0 0 2.9-2.9V7.2a2.9 2.9 0 0 0-2.9-2.9H7.2Zm4.8 2.9a4.8 4.8 0 1 1 0 9.6 4.8 4.8 0 0 1 0-9.6Zm0 1.8a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm5-3.2a1.15 1.15 0 1 1 0 2.3 1.15 1.15 0 0 1 0-2.3Z" /></svg>
+  }
+
+  return null
+}
+
 const skillLogoSources = {
   React: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
   TypeScript: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg',
@@ -994,7 +1011,7 @@ function ContactSection({ onAction }) {
           <div className="contact-socials" aria-label="Social links">
             {links.filter((link) => link.kind === 'social').map((link) => (
               <a href={link.href} key={link.id} target="_blank" rel="noreferrer" aria-label={link.label} onClick={onAction}>
-                {link.id === 'linkedin' ? 'in' : 'GH'}
+                <SocialIcon name={link.id} />
               </a>
             ))}
             <a href={`mailto:${developer.contactEmail}`} aria-label="Email" onClick={onAction}>@</a>
@@ -1039,7 +1056,7 @@ function SiteFooter({ onAction }) {
           <div className="footer-links" aria-label="Social and contact links">
           {socialLinks.map((link) => (
             <a href={link.href} key={link.id} target="_blank" rel="noreferrer" aria-label={link.label} onClick={onAction}>
-              {link.id === 'linkedin' ? 'in' : 'GH'}
+              <SocialIcon name={link.id} />
             </a>
           ))}
           <a href={`mailto:${developer.contactEmail}`} aria-label="Email" onClick={onAction}>@</a>
@@ -1056,54 +1073,43 @@ function SiteFooter({ onAction }) {
 }
 
 function App() {
-  const [theme, setTheme] = useState(() => {
-    try {
-      return window.localStorage.getItem('portfolio-theme') === 'dark' ? 'dark' : 'light'
-    } catch {
-      return 'light'
-    }
-  })
   const [isLoaded, setIsLoaded] = useState(false)
-  const [isMuted, setIsMuted] = useState(false)
   const [activeProject, setActiveProject] = useState(null)
-  const audioContextRef = useRef(null)
+  const [activeSection, setActiveSection] = useState(() => navigation.find((item) => item.href === window.location.hash)?.id || 'home')
   const completeLoading = useCallback(() => setIsLoaded(true), [])
   const closeProjectModal = useCallback(() => setActiveProject(null), [])
-  const playClick = useCallback(() => {
-    if (isMuted) return
-
-    const AudioContextConstructor = window.AudioContext || window.webkitAudioContext
-    if (!AudioContextConstructor) return
-
-    const audioContext = audioContextRef.current || new AudioContextConstructor()
-    audioContextRef.current = audioContext
-    if (audioContext.state === 'suspended') void audioContext.resume()
-
-    const oscillator = audioContext.createOscillator()
-    const gain = audioContext.createGain()
-    const now = audioContext.currentTime
-
-    oscillator.type = 'triangle'
-    oscillator.frequency.setValueAtTime(740, now)
-    oscillator.frequency.exponentialRampToValueAtTime(360, now + 0.075)
-    gain.gain.setValueAtTime(0.035, now)
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08)
-    oscillator.connect(gain)
-    gain.connect(audioContext.destination)
-    oscillator.start(now)
-    oscillator.stop(now + 0.08)
-  }, [isMuted])
+  const handleAction = useCallback(() => {}, [])
 
   useEffect(() => {
-    document.documentElement.dataset.theme = theme
     document.title = `${developer.name} - Developer Portfolio`
+  }, [])
 
-    try {
-      window.localStorage.setItem('portfolio-theme', theme)
-    } catch {
-      return
+  useEffect(() => {
+    let frame
+    const updateActiveSection = () => {
+      let currentSection = 'home'
+      navigation.forEach((item) => {
+        const section = document.querySelector(item.href)
+        if (section && section.getBoundingClientRect().top <= 220) currentSection = item.id
+      })
+      frame = window.requestAnimationFrame(() => setActiveSection(currentSection))
     }
-  }, [theme])
+    const syncHashSection = () => {
+      const hashSection = navigation.find((item) => item.href === window.location.hash)
+      if (hashSection) setActiveSection(hashSection.id)
+      else updateActiveSection()
+    }
+
+    updateActiveSection()
+    window.addEventListener('scroll', updateActiveSection, { passive: true })
+    window.addEventListener('hashchange', syncHashSection)
+
+    return () => {
+      window.cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', updateActiveSection)
+      window.removeEventListener('hashchange', syncHashSection)
+    }
+  }, [])
 
   return (
     <MotionConfig reducedMotion="user">
@@ -1118,48 +1124,29 @@ function App() {
             </div>
             <nav className="primary-nav" aria-label="Main navigation">
               {navigation.map((item) => (
-                <a className="nav-link" href={item.href} key={item.id} onClick={playClick}>
+                <a
+                  className={`nav-link${activeSection === item.id ? ' is-active' : ''}`}
+                  href={item.href}
+                  key={item.id}
+                  aria-current={activeSection === item.id ? 'location' : undefined}
+                  onClick={() => setActiveSection(item.id)}
+                >
                   {item.label}
                 </a>
               ))}
             </nav>
-            <div className="topbar-actions">
-              <button
-                className="sound-toggle inline-flex items-center gap-2"
-                type="button"
-                aria-label={isMuted ? 'Unmute interface sounds' : 'Mute interface sounds'}
-                aria-pressed={isMuted}
-                onClick={() => setIsMuted((current) => !current)}
-              >
-                <span className="sound-symbol" aria-hidden="true">{isMuted ? 'M' : 'S'}</span>
-                <span className="sound-label">{isMuted ? 'SOUND OFF' : 'SOUND ON'}</span>
-              </button>
-              <button
-                className="theme-toggle inline-flex items-center gap-2"
-                type="button"
-                aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-                aria-pressed={theme === 'dark'}
-                onClick={() => {
-                  playClick()
-                  setTheme((current) => current === 'light' ? 'dark' : 'light')
-                }}
-              >
-                <span className="theme-symbol" aria-hidden="true">{theme === 'light' ? 'L' : 'D'}</span>
-                <span>{theme === 'light' ? 'LIGHT MODE' : 'DARK MODE'}</span>
-              </button>
-            </div>
           </div>
         </header>
 
         <div className="page-frame">
-          <HomeBento onAction={playClick} />
+          <HomeBento onAction={handleAction} />
           <AboutSection onSelectDetail={setActiveProject} />
           <AlbumSection />
-          <ProjectsSection onSelectProject={setActiveProject} onAction={playClick} />
-          <ContactSection onAction={playClick} />
+          <ProjectsSection onSelectProject={setActiveProject} onAction={handleAction} />
+          <ContactSection onAction={handleAction} />
         </div>
 
-        <SiteFooter onAction={playClick} />
+        <SiteFooter onAction={handleAction} />
         <CustomCursor />
         <AnimatePresence>
           {activeProject && (
@@ -1167,7 +1154,7 @@ function App() {
               key={activeProject.id}
               project={activeProject}
               onClose={closeProjectModal}
-              onAction={playClick}
+              onAction={handleAction}
             />
           )}
           {!isLoaded && <LoadingScreen key="loading-screen" onComplete={completeLoading} />}
