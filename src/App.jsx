@@ -10,20 +10,22 @@ function LoadingScreen({ onComplete }) {
   const [opening, setOpening] = useState(false)
 
   useEffect(() => {
+    let current = 0
+    let openingTimeout
     const interval = window.setInterval(() => {
-      setProgress((current) => {
-        const next = Math.min(current + 5, 100)
+      current = Math.min(current + 5, 100)
+      setProgress(current)
 
-        if (next === 100) {
-          window.clearInterval(interval)
-          window.setTimeout(() => setOpening(true), 90)
-        }
-
-        return next
-      })
+      if (current === 100) {
+        window.clearInterval(interval)
+        openingTimeout = window.setTimeout(() => setOpening(true), 90)
+      }
     }, 18)
 
-    return () => window.clearInterval(interval)
+    return () => {
+      window.clearInterval(interval)
+      window.clearTimeout(openingTimeout)
+    }
   }, [])
 
   useEffect(() => {
@@ -36,6 +38,7 @@ function LoadingScreen({ onComplete }) {
   return (
     <motion.div
       className="loading-screen"
+      role="status"
       aria-label="Loading portfolio"
       exit={{ opacity: 0 }}
       transition={{ duration: 0.16 }}
@@ -56,7 +59,7 @@ function LoadingScreen({ onComplete }) {
         transition={{ duration: 0.18 }}
       >
         <span className="loading-kicker">{developer.name} / PORTFOLIO</span>
-        <strong className="loading-count" aria-live="polite">{progress}%</strong>
+        <strong className="loading-count" aria-hidden="true">{progress}%</strong>
         <span className="loading-caption">MAKING AN ENTRANCE</span>
       </motion.div>
       <span className="loading-corner loading-corner-left">EST. 2025</span>

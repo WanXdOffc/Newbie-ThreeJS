@@ -44,7 +44,7 @@ export const projects = [
     title: 'Tiny Radio',
     category: 'Experiment / 2024',
     summary: 'A little listening room for finding your next favorite.',
-    description: 'An expressive listening experience built around hand-picked radio stations, quick discovery, and a compact player that stays out of the music’s way.',
+    description: 'An expressive listening experience built around hand-picked radio stations, quick discovery, and a compact player that stays out of the music\'s way.',
     technologies: ['React', 'Web Audio', 'CSS'],
     images: [
       'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1400&q=85',
@@ -61,21 +61,21 @@ export const experience = [
     id: 'northstar-studio',
     organization: 'Northstar Studio',
     role: 'Frontend Engineer',
-    period: '2023 — NOW',
+    period: '2023 - NOW',
     description: 'Building thoughtful digital products with a small, very collaborative team.',
   },
   {
     id: 'common-ground',
     organization: 'Common Ground',
     role: 'Creative Developer',
-    period: '2021 — 2023',
+    period: '2021 - 2023',
     description: 'Turned ambitious visual systems into fast, accessible web experiences.',
   },
   {
     id: 'independent',
     organization: 'Independent',
     role: 'Designer & Developer',
-    period: '2019 — 2021',
+    period: '2019 - 2021',
     description: 'Partnered with early-stage teams to take ideas from sketch to launch.',
   },
 ]
