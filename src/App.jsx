@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion, MotionConfig, useMotionValue, useSpring } from 'framer-motion'
+import { AnimatePresence, motion, MotionConfig, useMotionValue } from 'framer-motion'
+import CustomCursor from './CustomCursor'
+import LoadingScreen from './LoadingScreen'
 import {
   albumPhotos,
   certifications,
@@ -13,8 +15,6 @@ import {
   skills,
 } from './portfolioData'
 import './App.css'
-
-const interactiveElements = 'a, button, [role="button"]'
 
 function SocialIcon({ name }) {
   if (name === 'github') {
@@ -45,150 +45,6 @@ const skillLogoSources = {
   Figma: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg',
   Accessibility: 'https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/svgs/solid/universal-access.svg',
   'Design systems': 'https://cdn.simpleicons.org/storybook/FF4785',
-}
-
-function LoadingScreen({ onComplete }) {
-  const [isLoading, setIsLoading] = useState(true)
-    const [progress, setProgress] = useState(0)
-  const completedExitAnimations = useRef(0)
-
-  const completeExitAnimation = () => {
-    if (isLoading) return
-    completedExitAnimations.current += 1
-    if (completedExitAnimations.current === 3) onComplete()
-  }
-
-  useEffect(() => {
-    const startedAt = performance.now()
-      const duration = 2600
-    let frame
-    let exitTimeout
-    const updateProgress = (now) => {
-      const nextProgress = Math.min(Math.round(((now - startedAt) / duration) * 100), 100)
-      setProgress(nextProgress)
-
-      if (nextProgress < 100) frame = window.requestAnimationFrame(updateProgress)
-        else exitTimeout = window.setTimeout(() => setIsLoading(false), 100)
-    }
-
-    frame = window.requestAnimationFrame(updateProgress)
-
-    return () => {
-      window.cancelAnimationFrame(frame)
-      window.clearTimeout(exitTimeout)
-    }
-  }, [])
-
-  const marqueeText = '// SYSTEM INITIALIZING // LOADING ASSETS // MARA KIM PORTFOLIO //'
-  const marqueeCopies = Array.from({ length: 4 }, (_, index) => <span className="loading-tape-copy" key={index}>{marqueeText}</span>)
-
-  return (
-    <motion.div
-      className="loading-screen"
-      role="status"
-      aria-label={`Assembling portfolio, ${progress}%`}
-    >
-      <motion.div
-        className="loading-split-panel loading-split-panel-top"
-        animate={{ y: isLoading ? '0%' : '-105%' }}
-          transition={{ type: 'spring', stiffness: 320, damping: 30, mass: 0.62 }}
-        onAnimationComplete={completeExitAnimation}
-      >
-        <div className="loading-tape loading-tape-top" aria-hidden="true">
-          <div className="loading-tape-track">{marqueeCopies}</div>
-        </div>
-      </motion.div>
-
-      <motion.div
-        className="loading-centerpiece"
-        animate={{ scale: isLoading ? 1 : 55, opacity: isLoading ? 1 : 0 }}
-          transition={{ duration: 0.48, ease: 'easeInOut' }}
-        onAnimationComplete={completeExitAnimation}
-      >
-        <div className="loading-spline-placeholder" aria-label="Spline 3D canvas placeholder">
-          <span className="loading-spline-label">SPLINE / 3D SCENE PLACEHOLDER</span>
-        </div>
-        <div className="loading-counter-wrap">
-          <strong className="loading-percentage">{progress}%</strong>
-          <span className="loading-status-badge">[ STATUS: ASSEMBLING VOXEL MODULES ]</span>
-        </div>
-      </motion.div>
-
-      <motion.div
-        className="loading-split-panel loading-split-panel-bottom"
-        animate={{ y: isLoading ? '0%' : '105%' }}
-        transition={{ type: 'spring', stiffness: 320, damping: 30, mass: 0.62 }}
-        onAnimationComplete={completeExitAnimation}
-      >
-        <div className="loading-tape loading-tape-bottom" aria-hidden="true">
-          <div className="loading-tape-track">{marqueeCopies}</div>
-        </div>
-        <div className="loading-bottom-content">
-          <div className="loading-progress-bar" role="progressbar" aria-label="Portfolio loading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow={progress}>
-            <motion.span className="loading-progress-fill" animate={{ scaleX: progress / 100 }} transition={{ duration: 0.12, ease: 'linear' }} />
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  )
-}
-
-function CustomCursor() {
-  const [enabled, setEnabled] = useState(false)
-  const [hovering, setHovering] = useState(false)
-  const x = useMotionValue(-20)
-  const y = useMotionValue(-20)
-  const springX = useSpring(x, { stiffness: 420, damping: 34, mass: 0.3 })
-  const springY = useSpring(y, { stiffness: 420, damping: 34, mass: 0.3 })
-
-  useEffect(() => {
-    const media = window.matchMedia('(pointer: fine) and (min-width: 768px)')
-    const updateEnabled = () => setEnabled(media.matches)
-
-    updateEnabled()
-    media.addEventListener('change', updateEnabled)
-
-    return () => media.removeEventListener('change', updateEnabled)
-  }, [])
-
-  useEffect(() => {
-    if (!enabled) return undefined
-
-    const moveCursor = (event) => {
-      x.set(event.clientX)
-      y.set(event.clientY)
-    }
-    const enterTarget = (event) => {
-      if (event.target instanceof Element && event.target.closest(interactiveElements)) setHovering(true)
-    }
-    const leaveTarget = (event) => {
-      if (!(event.target instanceof Element) || !event.target.closest(interactiveElements)) return
-      if (event.relatedTarget instanceof Element && event.relatedTarget.closest(interactiveElements)) return
-      setHovering(false)
-    }
-
-    window.addEventListener('pointermove', moveCursor)
-    document.addEventListener('pointerover', enterTarget)
-    document.addEventListener('pointerout', leaveTarget)
-
-    return () => {
-      window.removeEventListener('pointermove', moveCursor)
-      document.removeEventListener('pointerover', enterTarget)
-      document.removeEventListener('pointerout', leaveTarget)
-    }
-  }, [enabled, x, y])
-
-  if (!enabled) return null
-
-  return (
-    <motion.div
-      className={`custom-cursor${hovering ? ' is-hovering' : ''}`}
-      aria-hidden="true"
-      animate={{ scale: hovering ? 2.7 : 1 }}
-      transition={{ type: 'spring', stiffness: 500, damping: 28 }}
-      style={{ x: springX, y: springY }}
-    />
-  )
 }
 
 function HomeBento({ onAction }) {
@@ -396,7 +252,14 @@ function GithubActivityCard() {
   ] : []
 
   return (
-    <section className="github-card" aria-label={`Aktivitas GitHub @${developer.githubUsername}`}>
+    <motion.section
+      className="github-card"
+      aria-label={`Aktivitas GitHub @${developer.githubUsername}`}
+      initial={{ opacity: 0, x: 100 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ type: 'spring', stiffness: 78, damping: 20 }}
+    >
       <div className="github-heading">
         <div className="github-profile-links">
           <a className="github-profile-pill" href={`https://github.com/${developer.githubUsername}`} target="_blank" rel="noreferrer">
@@ -458,7 +321,7 @@ function GithubActivityCard() {
         {[0, 1, 2, 3, 4].map((level) => <span className={`activity-square activity-level-${level}`} key={level} />)}
         <span>BANYAK</span>
       </div>
-    </section>
+    </motion.section>
   )
 }
 
@@ -495,14 +358,28 @@ function AboutSection({ onSelectDetail }) {
       </div>
 
       <div className="about-layout">
-        <article className="about-copy-card">
+        <motion.article
+          className="about-copy-card"
+          initial={{ opacity: 0, x: -100 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ type: 'spring', stiffness: 78, damping: 20 }}
+        >
           <span className="card-index">THE SHORT VERSION</span>
           <h3>Curiosity in.<br />Useful things out.</h3>
           <p>{developer.bio}</p>
           <span className="about-signature">{developer.monogram} / {developer.location}</span>
-        </article>
+        </motion.article>
 
-        <GithubActivityCard />
+        <motion.div
+          className="about-github-reveal"
+          initial={{ opacity: 0, x: 100 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ type: 'spring', stiffness: 78, damping: 20 }}
+        >
+          <GithubActivityCard />
+        </motion.div>
       </div>
 
       <section className="education-section" aria-labelledby="education-title">
