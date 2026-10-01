@@ -48,64 +48,87 @@ const skillLogoSources = {
 }
 
 function LoadingScreen({ onComplete }) {
-  const [progress, setProgress] = useState(0)
-  const [opening, setOpening] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+    const [progress, setProgress] = useState(0)
+  const completedExitAnimations = useRef(0)
+
+  const completeExitAnimation = () => {
+    if (isLoading) return
+    completedExitAnimations.current += 1
+    if (completedExitAnimations.current === 3) onComplete()
+  }
 
   useEffect(() => {
-    let current = 0
-    let openingTimeout
-    const interval = window.setInterval(() => {
-      current = Math.min(current + 5, 100)
-      setProgress(current)
+    const startedAt = performance.now()
+      const duration = 2600
+    let frame
+    let exitTimeout
+    const updateProgress = (now) => {
+      const nextProgress = Math.min(Math.round(((now - startedAt) / duration) * 100), 100)
+      setProgress(nextProgress)
 
-      if (current === 100) {
-        window.clearInterval(interval)
-        openingTimeout = window.setTimeout(() => setOpening(true), 90)
-      }
-    }, 18)
+      if (nextProgress < 100) frame = window.requestAnimationFrame(updateProgress)
+        else exitTimeout = window.setTimeout(() => setIsLoading(false), 100)
+    }
+
+    frame = window.requestAnimationFrame(updateProgress)
 
     return () => {
-      window.clearInterval(interval)
-      window.clearTimeout(openingTimeout)
+      window.cancelAnimationFrame(frame)
+      window.clearTimeout(exitTimeout)
     }
   }, [])
 
-  useEffect(() => {
-    if (!opening) return undefined
-
-    const timeout = window.setTimeout(onComplete, 720)
-    return () => window.clearTimeout(timeout)
-  }, [onComplete, opening])
+  const marqueeText = '// SYSTEM INITIALIZING // LOADING ASSETS // MARA KIM PORTFOLIO //'
+  const marqueeCopies = Array.from({ length: 4 }, (_, index) => <span className="loading-tape-copy" key={index}>{marqueeText}</span>)
 
   return (
     <motion.div
       className="loading-screen"
       role="status"
-      aria-label="Loading portfolio"
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.16 }}
+      aria-label={`Assembling portfolio, ${progress}%`}
     >
       <motion.div
-        className="loading-door loading-door-left"
-        animate={{ x: opening ? '-102%' : '0%' }}
-        transition={{ type: 'spring', stiffness: 110, damping: 24, mass: 0.85 }}
-      />
-      <motion.div
-        className="loading-door loading-door-right"
-        animate={{ x: opening ? '102%' : '0%' }}
-        transition={{ type: 'spring', stiffness: 110, damping: 24, mass: 0.85 }}
-      />
-      <motion.div
-        className="loading-copy"
-        animate={{ opacity: opening ? 0 : 1, scale: opening ? 0.88 : 1 }}
-        transition={{ duration: 0.18 }}
+        className="loading-split-panel loading-split-panel-top"
+        animate={{ y: isLoading ? '0%' : '-105%' }}
+          transition={{ type: 'spring', stiffness: 320, damping: 30, mass: 0.62 }}
+        onAnimationComplete={completeExitAnimation}
       >
-        <span className="loading-kicker">{developer.name} / PORTFOLIO</span>
-        <strong className="loading-count" aria-hidden="true">{progress}%</strong>
-        <span className="loading-caption">MAKING AN ENTRANCE</span>
+        <div className="loading-tape loading-tape-top" aria-hidden="true">
+          <div className="loading-tape-track">{marqueeCopies}</div>
+        </div>
       </motion.div>
-      <span className="loading-corner loading-corner-left">EST. 2025</span>
-      <span className="loading-corner loading-corner-right">PLEASE STAND BY</span>
+
+      <motion.div
+        className="loading-centerpiece"
+        animate={{ scale: isLoading ? 1 : 55, opacity: isLoading ? 1 : 0 }}
+          transition={{ duration: 0.48, ease: 'easeInOut' }}
+        onAnimationComplete={completeExitAnimation}
+      >
+        <div className="loading-spline-placeholder" aria-label="Spline 3D canvas placeholder">
+          <span className="loading-spline-label">SPLINE / 3D SCENE PLACEHOLDER</span>
+        </div>
+        <div className="loading-counter-wrap">
+          <strong className="loading-percentage">{progress}%</strong>
+          <span className="loading-status-badge">[ STATUS: ASSEMBLING VOXEL MODULES ]</span>
+        </div>
+      </motion.div>
+
+      <motion.div
+        className="loading-split-panel loading-split-panel-bottom"
+        animate={{ y: isLoading ? '0%' : '105%' }}
+        transition={{ type: 'spring', stiffness: 320, damping: 30, mass: 0.62 }}
+        onAnimationComplete={completeExitAnimation}
+      >
+        <div className="loading-tape loading-tape-bottom" aria-hidden="true">
+          <div className="loading-tape-track">{marqueeCopies}</div>
+        </div>
+        <div className="loading-bottom-content">
+          <div className="loading-progress-bar" role="progressbar" aria-label="Portfolio loading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow={progress}>
+            <motion.span className="loading-progress-fill" animate={{ scaleX: progress / 100 }} transition={{ duration: 0.12, ease: 'linear' }} />
+          </div>
+        </div>
+      </motion.div>
     </motion.div>
   )
 }
@@ -454,7 +477,15 @@ function AboutSection({ onSelectDetail }) {
   ]
 
   return (
-    <section id="about" className="content-section about-section" aria-labelledby="about-title">
+    <motion.section
+      id="about"
+      className="content-section about-section scroll-reveal"
+      aria-labelledby="about-title"
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.08 }}
+      transition={{ duration: 0.48, ease: [0.22, 0.7, 0.2, 1] }}
+    >
       <div className="section-heading">
         <div>
           <p className="section-kicker">ABOUT ME</p>
@@ -592,7 +623,7 @@ function AboutSection({ onSelectDetail }) {
           )}
         </section>
       </div>
-    </section>
+    </motion.section>
   )
 }
 
@@ -655,7 +686,14 @@ function AlbumSection() {
   const [tilts] = useState(() => albumPhotos.map(() => Number((-3 + Math.random() * 8).toFixed(1))))
 
   return (
-    <section className="content-section album-section" aria-labelledby="album-title">
+    <motion.section
+      className="content-section album-section scroll-reveal"
+      aria-labelledby="album-title"
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.12 }}
+      transition={{ duration: 0.48, ease: [0.22, 0.7, 0.2, 1] }}
+    >
       <div className="section-heading">
         <div>
           <p className="section-kicker">05 / OUTSIDE THE TAB</p>
@@ -684,7 +722,7 @@ function AlbumSection() {
           </motion.figure>
         ))}
       </div>
-    </section>
+    </motion.section>
   )
 }
 
@@ -698,7 +736,15 @@ function ProjectsSection({ onSelectProject, onAction }) {
   const visibleProjects = showAll ? filteredProjects : filteredProjects.slice(0, 6)
 
   return (
-    <section id="projects" className="content-section projects-section" aria-labelledby="projects-title">
+    <motion.section
+      id="projects"
+      className="content-section projects-section scroll-reveal"
+      aria-labelledby="projects-title"
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.08 }}
+      transition={{ duration: 0.48, ease: [0.22, 0.7, 0.2, 1] }}
+    >
       <div className="section-heading project-heading">
         <div>
           <p className="section-kicker">SELECTED WORKS</p>
@@ -791,7 +837,7 @@ function ProjectsSection({ onSelectProject, onAction }) {
           </button>
         </div>
       )}
-    </section>
+    </motion.section>
   )
 }
 
@@ -999,7 +1045,15 @@ function ContactSection({ onAction }) {
   }
 
   return (
-    <section id="contact" className="content-section contact-section" aria-labelledby="contact-title">
+    <motion.section
+      id="contact"
+      className="content-section contact-section scroll-reveal"
+      aria-labelledby="contact-title"
+      initial={{ opacity: 0, y: 18 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.08 }}
+      transition={{ duration: 0.48, ease: [0.22, 0.7, 0.2, 1] }}
+    >
       <div className="contact-layout">
         <div className="contact-intro">
           <span className="contact-kicker">CONTACT</span>
@@ -1040,7 +1094,7 @@ function ContactSection({ onAction }) {
           </div>
         </form>
       </div>
-    </section>
+    </motion.section>
   )
 }
 
