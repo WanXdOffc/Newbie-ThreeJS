@@ -1,10 +1,10 @@
 export const developer = {
-  name: 'Mara Kim',
-  monogram: 'MK',
-  role: 'Frontend engineer & creative developer',
+  name: 'IKetut Dharmawan',
+  monogram: 'Dev',
+  role: 'AI Enthusiast',
   availability: 'Available for select projects',
-  location: 'Brooklyn, NY',
-  contactEmail: 'hello@example.com',
+  location: 'Manado, Indonesia',
+  contactEmail: 'iketutdharrmawan2007@gmail.com',
   githubUsername: 'WanXdOffc',
   bio: 'I like my interfaces a little loud and my code a lot thoughtful. I turn curious questions into useful, tactile things for the web.',
   profileImages: [
@@ -15,48 +15,18 @@ export const developer = {
 
 export const projects = [
   {
-    id: 'field-notes',
-    title: 'Field Notes',
-    category: 'Digital product / 2025',
+    id: 'my-blog',
+    title: 'Blog Pribadi',
+    category: 'Website / 2026',
     summary: 'A calmer way to collect the little things worth remembering.',
     description: 'A pocket-sized digital garden for collecting observations, references, and half-formed ideas. Designed to feel tactile without getting in the way.',
-    technologies: ['React', 'TypeScript', 'CSS'],
+    technologies: ['Laravel', 'React', 'Tailwind CSS', 'MySQL'],
     images: [
       'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1400&q=85',
       'https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=1400&q=85',
       'https://images.unsplash.com/photo-1456324504439-367cee3b3c32?auto=format&fit=crop&w=1400&q=85',
     ],
-    repositoryUrl: 'https://github.com/',
-    liveUrl: 'https://example.com/',
-  },
-  {
-    id: 'good-form',
-    title: 'Good Form',
-    category: 'Commerce / 2024',
-    summary: 'A playful home for objects made to last.',
-    description: 'A small-shop storefront concept pairing a bold editorial system with a tidy, quick checkout and a warm product discovery flow.',
-    technologies: ['React', 'Vite', 'Framer Motion'],
-    images: [
-      'https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?auto=format&fit=crop&w=1400&q=85',
-      'https://images.unsplash.com/photo-1494438639946-1ebd1d20bf85?auto=format&fit=crop&w=1400&q=85',
-      'https://images.unsplash.com/photo-1490312278390-ab64016e0aa9?auto=format&fit=crop&w=1400&q=85&sat=-30',
-    ],
-    repositoryUrl: 'https://github.com/',
-    liveUrl: 'https://example.com/',
-  },
-  {
-    id: 'tiny-radio',
-    title: 'Tiny Radio',
-    category: 'Experiment / 2024',
-    summary: 'A little listening room for finding your next favorite.',
-    description: 'An expressive listening experience built around hand-picked radio stations, quick discovery, and a compact player that stays out of the music\'s way.',
-    technologies: ['React', 'Web Audio', 'CSS'],
-    images: [
-      'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1400&q=85',
-      'https://images.unsplash.com/photo-1516280440614-37939bbacd81?auto=format&fit=crop&w=1400&q=85&sat=-35',
-      'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1400&q=85',
-    ],
-    repositoryUrl: 'https://github.com/',
+    repositoryUrl: 'https://github.com/WanXdOffc/myBlog',
     liveUrl: 'https://example.com/',
   },
 ]
@@ -87,50 +57,56 @@ export const experience = [
 
 export const education = [
   {
-    id: 'parsons',
-    institution: 'Parsons School of Design',
-    qualification: 'BFA, Communication Design',
-    period: '2015 - 2019',
-    detail: 'Focus in interactive systems and creative technology.',
+    id: 'university', 
+    institution: 'Universitas Pendidikan Ganesha',
+    qualification: '-',
+    period: '2025 - Now',
+    detail: 'Focus in study and explore the world of technology and programming.',
+  },
+  {
+    id: 'SMA',
+    institution: 'SMAS BUDI LUHUR KEMBANG MERTHA',
+    qualification: 'Mathematics and Natural Sciences',
+    period: '2022 - 2025',
+    detail: 'Focus in study and explore the world of technology and programming.',
+  },
+  {
+    id: 'SMP',
+    institution: 'SMPS BUDI LUHUR KEMBANG MERTHA',
+    qualification: 'Junior High School',
+    period: '2019 - 2022',
+    detail: 'Focus sleeping in the class and playing games',
+  },
+  {
+    id: 'SD',
+    institution: 'SDN 1 KEMBANG MERTHA',
+    qualification: 'Elementary School',
+    period: '2013 - 2019',
+    detail: 'Just a normal elementary school student who likes to play and learn new things.',
   },
 ]
 
 export const leadership = [
   {
     id: 'code-for-neighbors',
-    organization: 'Code for Neighbors',
-    role: 'Volunteer mentor',
-    period: '2022 - NOW',
-    detail: 'Help early-career developers build confidence through practical projects.',
-  },
-  {
-    id: 'design-systems-meetup',
-    organization: 'Design Systems Meetup',
-    role: 'Community organizer',
-    period: '2020 - 2023',
-    detail: 'Hosted monthly conversations between designers and frontend teams.',
+    organization: 'Soon',
+    role: '-',
+    period: '2026 - NOW',
+    detail: 'Soon',
   },
 ]
 
 export const certifications = [
   {
     id: 'accessible-web',
-    name: 'Accessibility for Web Design',
-    issuer: 'W3C Web Accessibility Initiative',
-    year: '2024',
-  },
-  {
-    id: 'advanced-react',
-    name: 'Advanced React Patterns',
-    issuer: 'Frontend Masters',
-    year: '2023',
+    name: 'Soon',
+    issuer: '-',
+    year: '-',
   },
 ]
 
 export const skills = [
   { category: 'Frontend', items: ['React', 'TypeScript', 'JavaScript', 'HTML', 'CSS'] },
-  { category: 'Interaction', items: ['Framer Motion', 'Web Audio', 'Responsive UI'] },
-  { category: 'Workflow', items: ['Git', 'Figma', 'Accessibility', 'Design systems'] },
 ]
 
 export const links = [
