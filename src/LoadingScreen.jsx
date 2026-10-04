@@ -146,7 +146,7 @@ function LoadingScreen({ onComplete }) {
       className="loading-screen minimal-loader"
       role="status"
       aria-label={`Initializing portfolio ${progress}%`}
-      initial={{ opacity: 0 }}
+      initial={{ opacity: 1 }}
       animate={{ opacity: isLoading ? 1 : 0, scale: isLoading ? 1 : 1.025 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.32, ease: 'easeOut' }}

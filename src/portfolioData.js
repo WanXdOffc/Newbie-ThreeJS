@@ -7,9 +7,13 @@ export const developer = {
   contactEmail: 'iketutdharrmawan2007@gmail.com',
   githubUsername: 'WanXdOffc',
   bio: 'I like my interfaces a little loud and my code a lot thoughtful. I turn curious questions into useful, tactile things for the web.',
+  specialties: [
+    'AI Enthusiast',
+  ],
+  cvUrl: '/cv.pdf',
   profileImages: [
-    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=900&q=85',
-    'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=900&q=85',
+    'https://i.ibb.co.com/8DfRYH2B/Whats-App-Image-2026-10-04-at-5-25-52-PM.jpg',
+    'https://i.ibb.co.com/8DfRYH2B/Whats-App-Image-2026-10-04-at-5-25-52-PM.jpg',
   ],
 }
 
@@ -20,7 +24,7 @@ export const projects = [
     category: 'Website / 2026',
     summary: 'A calmer way to collect the little things worth remembering.',
     description: 'A pocket-sized digital garden for collecting observations, references, and half-formed ideas. Designed to feel tactile without getting in the way.',
-    technologies: ['Laravel', 'React', 'Tailwind CSS', 'MySQL'],
+    technologies: ['Laravel', 'Vite', 'Tailwind CSS', 'PostgreSQL'],
     images: [
       'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1400&q=85',
       'https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=1400&q=85',
@@ -34,34 +38,29 @@ export const projects = [
 export const experience = [
   {
     id: 'northstar-studio',
-    organization: 'Northstar Studio',
-    role: 'Frontend Engineer',
-    period: '2023 - NOW',
-    description: 'Building thoughtful digital products with a small, very collaborative team.',
+    organization: 'Wanyzx',
+    role: 'Prompt Engineer',
+    period: '2025 - NOW',
+    description: 'Creating prompts for AI models.',
   },
   {
-    id: 'common-ground',
-    organization: 'Common Ground',
-    role: 'Creative Developer',
-    period: '2021 - 2023',
-    description: 'Turned ambitious visual systems into fast, accessible web experiences.',
+    id: 'northstar-studio',
+    organization: 'Wanyzx',
+    role: 'AI Enthusiast',
+    period: '2024 - 2025',
+    description: 'Sharing my thoughts and ideas about AI to the world.',
   },
-  {
-    id: 'independent',
-    organization: 'Independent',
-    role: 'Designer & Developer',
-    period: '2019 - 2021',
-    description: 'Partnered with early-stage teams to take ideas from sketch to launch.',
-  },
+
 ]
 
 export const education = [
   {
-    id: 'university', 
+    id: 'university',
     institution: 'Universitas Pendidikan Ganesha',
-    qualification: '-',
+    qualification: 'Start Study in Computer Science',
     period: '2025 - Now',
     detail: 'Focus in study and explore the world of technology and programming.',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/0/09/Logo_undiksha.png',
   },
   {
     id: 'SMA',
@@ -69,6 +68,7 @@ export const education = [
     qualification: 'Mathematics and Natural Sciences',
     period: '2022 - 2025',
     detail: 'Focus in study and explore the world of technology and programming.',
+    logo: '/education/school-logo.svg',
   },
   {
     id: 'SMP',
@@ -76,6 +76,7 @@ export const education = [
     qualification: 'Junior High School',
     period: '2019 - 2022',
     detail: 'Focus sleeping in the class and playing games',
+    logo: '/education/school-logo.svg',
   },
   {
     id: 'SD',
@@ -83,40 +84,68 @@ export const education = [
     qualification: 'Elementary School',
     period: '2013 - 2019',
     detail: 'Just a normal elementary school student who likes to play and learn new things.',
+    logo: '/education/school-logo.svg',
   },
 ]
 
 export const leadership = [
   {
-    id: 'code-for-neighbors',
-    organization: 'Soon',
-    role: '-',
-    period: '2026 - NOW',
-    detail: 'Soon',
+    id: 'usk-software-engineering',
+    organization: 'No-Organization',
+    badge: 'Not-Bad',
+    role: 'Still Learning',
+    period: '2025 - Now',
+    logo: '',
+    detail:
+      '-',
+    images: [],
   },
+]
+
+// Statistik angka di About section (bisa diatur bebas di sini)
+export const stats = [
+  { value: 2, suffix: '+', label: 'PROJECTS COMPLETED' },
+  { value: 1, suffix: '+', label: 'YEARS EXPERIENCE' },
+  { value: 4, suffix: '+', label: 'SKILLS IN TOOLKIT' },
+  { value: 99, suffix: '%', label: 'PASSION FOR CODE' },
 ]
 
 export const certifications = [
   {
-    id: 'accessible-web',
-    name: 'Soon',
-    issuer: '-',
-    year: '-',
+    id: 'juara-vibecoding',
+    name: 'Juara Vibe Coding',
+    issuer: 'Dicoding',
+    year: '2026',
+    credentialId: 'JVC2605-PXLM-MMC9',
+    credentialUrl: '',
+    image: 'https://i.ibb.co.com/5hzgL5Dx/Whats-App-Image-2026-10-04-at-5-37-32-PM.jpg',
+    images: [
+      'https://i.ibb.co.com/5hzgL5Dx/Whats-App-Image-2026-10-04-at-5-37-32-PM.jpg',
+    ],
   },
 ]
 
 export const skills = [
   { category: 'Frontend', items: ['React', 'TypeScript', 'JavaScript', 'HTML', 'CSS'] },
+  { category: 'Backend', items: ['Node.js', 'Express', 'MongoDB', 'PostgreSQL'] },
+  { category: 'Tools', items: ['Git', 'Docker'] },
+]
+
+// Media sosial yang tampil di Footer & Contact section
+// Tambah atau kurangi media sosial di sini, logo/ikon akan otomatis dinamis!
+// ID yang didukung: github, linkedin, instagram, discord, twitter (atau x), youtube, tiktok, telegram, facebook, whatsapp, reddit, medium, dll.
+export const socialLinks = [
+  { id: 'github', label: 'GitHub', href: 'https://github.com/WanXdOffc' },
+  { id: 'linkedin', label: 'LinkedIn', href: 'https://linkedin.com/in/i-ketut-dharmawan' },
+  { id: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/xwan.store_' },
 ]
 
 export const links = [
   { id: 'blog', label: 'Blog', href: 'https://medium.com/', kind: 'writing' },
   { id: 'api', label: 'API', href: 'https://developer.mozilla.org/', kind: 'reference' },
   { id: 'code-library', label: 'Code Library', href: 'https://github.com/WanXdOffc', kind: 'code' },
-  { id: 'github', label: 'GitHub', href: 'https://github.com/WanXdOffc', kind: 'social' },
-  { id: 'linkedin', label: 'LinkedIn', href: 'https://linkedin.com/', kind: 'social' },
-  { id: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/', kind: 'social' },
-  { id: 'email', label: 'Email', href: 'mailto:hello@example.com', kind: 'contact' },
+  ...socialLinks.map((item) => ({ ...item, kind: 'social' })),
+  { id: 'email', label: 'Email', href: 'mailto:iketutdharrmawan2007@gmail.com', kind: 'contact' },
 ]
 
 export const navigation = [
@@ -128,28 +157,16 @@ export const navigation = [
 
 export const albumPhotos = [
   {
-    id: 'coastline',
-    image: 'https://images.unsplash.com/photo-1473116763249-2faaef81ccda?auto=format&fit=crop&w=1000&q=85',
-    alt: 'Quiet coastline seen from above',
-    caption: 'A day out of office',
+    id: 'minikrep',
+    image: 'https://i.ibb.co.com/1t3zvPG0/Whats-App-Image-2026-10-04-at-5-32-12-PM.jpg',
+    alt: 'Minikrep',
+    caption: 'Play Minecraft',
   },
   {
-    id: 'city-lights',
-    image: 'https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=1000&q=85',
-    alt: 'Colorful city lights after dark',
-    caption: 'After the last train',
-  },
-  {
-    id: 'studio-desk',
-    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1000&q=85',
-    alt: 'A sunlit desk set up for creative work',
-    caption: 'Current workstation',
-  },
-  {
-    id: 'wildflowers',
-    image: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1000&q=85',
-    alt: 'Bright wildflowers in full bloom',
-    caption: 'Color study no. 04',
+    id: 'gunungbatur',
+    image: 'https://i.ibb.co.com/DgT3tB9C/Whats-App-Image-2026-10-04-at-5-33-12-PM.jpg',
+    alt: 'Gunung Batur',
+    caption: 'Sunrise at Batur',
   },
 ]
 
