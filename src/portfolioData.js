@@ -117,10 +117,22 @@ export const certifications = [
     issuer: 'Google Develover Groups',
     year: '2026',
     credentialId: 'JVC2605-PXLM-MMC9',
-    credentialUrl: '',
+    credentialUrl: 'https://certificate-verifier-1023611269119.asia-southeast1.run.app/',
     image: 'https://i.ibb.co.com/5hzgL5Dx/Whats-App-Image-2026-10-04-at-5-37-32-PM.jpg',
     images: [
       'https://i.ibb.co.com/5hzgL5Dx/Whats-App-Image-2026-10-04-at-5-37-32-PM.jpg',
+    ],
+  },
+  {
+    id: 'it-bootcamp2025',
+    name: 'IT Bootcamp 2025',
+    issuer: 'Integer - HMJ TI UNDIKSHA',
+    year: '2025',
+    credentialId: '175/e/PANPEL IT BOOTCAMP/VI 1/PGM/X/2025',
+    credentialUrl: '',
+    image: 'https://i.ibb.co.com/xqjR0pd6/Screenshot-2026-10-05-074132.png',
+    images: [
+      'https://i.ibb.co.com/xqjR0pd6/Screenshot-2026-10-05-074132.png',
     ],
   },
 ]
