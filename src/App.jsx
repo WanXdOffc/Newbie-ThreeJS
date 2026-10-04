@@ -724,12 +724,20 @@ function HomeBento({ onAction }) {
     window.clearTimeout(burstTimeoutRef.current)
   }, [])
 
+  const nameTokens = developer.name.trim().split(/\s+/)
+  const heroFirst = nameTokens.length >= 3 && nameTokens[0].length <= 2
+    ? `${nameTokens[0]} ${nameTokens[1]}`
+    : nameTokens[0]
+  const heroLast = nameTokens.length >= 3 && nameTokens[0].length <= 2
+    ? nameTokens.slice(2).join(' ')
+    : nameTokens.slice(1).join(' ')
+
   return (
     <main id="home" className="home-stage">
       <section className="hero-showcase" aria-label={`${developer.name}'s portfolio introduction`}>
         <div className="hero-copy">
           <p className="hero-status"><span className="status-light" /> STATUS: READY TO BUILD</p>
-          <h1 className="hero-title">{developer.name.split(' ')[0]}<br /><span>{developer.name.split(' ').slice(1).join(' ')}</span></h1>
+          <h1 className="hero-title">{heroFirst}<br /><span>{heroLast}</span></h1>
           <div className="hero-bio-panel">
             <p>{developer.bio}</p>
             <div className="hero-tags" aria-label="Specialties">

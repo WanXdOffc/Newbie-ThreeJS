@@ -37,14 +37,14 @@ export const projects = [
 
 export const experience = [
   {
-    id: 'northstar-studio',
+    id: 'wanyzx-prompt-engineer',
     organization: 'Wanyzx',
     role: 'Prompt Engineer',
     period: '2025 - NOW',
     description: 'Creating prompts for AI models.',
   },
   {
-    id: 'northstar-studio',
+    id: 'wanyzx-ai-enthusiast',
     organization: 'Wanyzx',
     role: 'AI Enthusiast',
     period: '2024 - 2025',
