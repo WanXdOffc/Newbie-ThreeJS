@@ -26,9 +26,9 @@ export const projects = [
     description: 'A pocket-sized digital garden for collecting observations, references, and half-formed ideas. Designed to feel tactile without getting in the way.',
     technologies: ['Laravel', 'Vite', 'Tailwind CSS', 'PostgreSQL'],
     images: [
-      'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1400&q=85',
-      'https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=1400&q=85',
-      'https://images.unsplash.com/photo-1456324504439-367cee3b3c32?auto=format&fit=crop&w=1400&q=85',
+      'https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1517842645767-c639042777db?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1456324504439-367cee3b3c32?auto=format&fit=crop&w=800&q=80',
     ],
     repositoryUrl: 'https://github.com/WanXdOffc/myBlog',
     liveUrl: 'https://example.com/',
@@ -114,7 +114,7 @@ export const certifications = [
   {
     id: 'juara-vibecoding',
     name: 'Juara Vibe Coding',
-    issuer: 'Dicoding',
+    issuer: 'Google Develover Groups',
     year: '2026',
     credentialId: 'JVC2605-PXLM-MMC9',
     credentialUrl: '',

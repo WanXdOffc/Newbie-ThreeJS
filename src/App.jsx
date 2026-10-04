@@ -704,6 +704,10 @@ function HomeBento({ onAction }) {
     let currentSpeed = 1 / 24000
 
     const moveCar = (time) => {
+      if (window.innerWidth < 768) {
+        frame = window.requestAnimationFrame(moveCar)
+        return
+      }
       if (!previousTime) previousTime = time
       const elapsed = Math.min(time - previousTime, 48)
       previousTime = time
@@ -1834,28 +1838,34 @@ function App() {
   }, [])
 
   useEffect(() => {
-    let frame
-    const updateActiveSection = () => {
-      let currentSection = 'home'
-      navigation.forEach((item) => {
-        const section = document.querySelector(item.href)
-        if (section && section.getBoundingClientRect().top <= 220) currentSection = item.id
-      })
-      frame = window.requestAnimationFrame(() => setActiveSection(currentSection))
-    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting)
+        if (visible.length > 0) {
+          visible.sort((a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top))
+          setActiveSection(visible[0].target.id)
+        }
+      },
+      {
+        rootMargin: '-10% 0px -50% 0px',
+        threshold: [0, 0.1, 0.3],
+      }
+    )
+
+    navigation.forEach((item) => {
+      const el = document.querySelector(item.href)
+      if (el) observer.observe(el)
+    })
+
     const syncHashSection = () => {
       const hashSection = navigation.find((item) => item.href === window.location.hash)
       if (hashSection) setActiveSection(hashSection.id)
-      else updateActiveSection()
     }
 
-    updateActiveSection()
-    window.addEventListener('scroll', updateActiveSection, { passive: true })
     window.addEventListener('hashchange', syncHashSection)
 
     return () => {
-      window.cancelAnimationFrame(frame)
-      window.removeEventListener('scroll', updateActiveSection)
+      observer.disconnect()
       window.removeEventListener('hashchange', syncHashSection)
     }
   }, [])
