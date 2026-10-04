@@ -1,5 +1,5 @@
 export const developer = {
-  name: 'IKetut Dharmawan',
+  name: 'I Ketut Dharmawan',
   monogram: 'Dev',
   role: 'AI Enthusiast',
   availability: 'Available for select projects',
