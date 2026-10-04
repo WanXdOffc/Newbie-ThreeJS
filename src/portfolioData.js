@@ -19,7 +19,7 @@ export const developer = {
 
 export const projects = [
   {
-    id: 'my-blog',
+    id: 'my-blogg',
     title: 'Blog Pribadi',
     category: 'Website / 2026',
     summary: 'A calmer way to collect the little things worth remembering.',
