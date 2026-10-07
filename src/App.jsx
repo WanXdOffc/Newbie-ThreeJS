@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, MotionConfig, useMotionValue } from 'framer-motion'
 import CustomCursor from './CustomCursor'
 import LoadingScreen from './LoadingScreen'
+import CaptchaBox from './CaptchaBox'
+import { generateCaptchaCode, validateCaptcha } from './captchaUtils'
 import {
   albumPhotos,
   certifications,
@@ -339,7 +341,7 @@ function playCarHorn() {
     oscHighTri.stop(now + 0.27)
 
     setTimeout(() => {
-      try { ctx.close() } catch {}
+      try { ctx.close() } catch { /* ignore audio close error */ }
     }, 400)
   } catch {
     // Audio fallback silent if blocked
@@ -1278,12 +1280,14 @@ function AboutSection({ onSelectDetail }) {
 
 function CountUpStat({ value, suffix, label }) {
   const [count, setCount] = useState(value)
+  const [prevValue, setPrevValue] = useState(value)
   const isHoveredRef = useRef(false)
   const frameRef = useRef(null)
 
-  useEffect(() => {
+  if (prevValue !== value) {
+    setPrevValue(value)
     setCount(value)
-  }, [value])
+  }
 
   const stopAndReset = () => {
     isHoveredRef.current = false
@@ -1730,17 +1734,81 @@ function ExperienceSection() {
 
 function ContactSection({ onAction }) {
   const [status, setStatus] = useState('')
+  const [captchaCode, setCaptchaCode] = useState(() => generateCaptchaCode())
+  const [captchaInput, setCaptchaInput] = useState('')
+  const [captchaError, setCaptchaError] = useState('')
+  const [honeypot, setHoneypot] = useState('')
+  const formMountTime = useRef(0)
+
+  useEffect(() => {
+    formMountTime.current = Date.now()
+  }, [])
+
+  const isVerified = Boolean(
+    captchaInput &&
+    captchaCode &&
+    validateCaptcha(captchaInput, captchaCode)
+  )
+
+  const handleRefreshCaptcha = useCallback(() => {
+    setCaptchaCode(generateCaptchaCode())
+    setCaptchaInput('')
+    setCaptchaError('')
+  }, [])
+
+  const handleCaptchaInputChange = (value) => {
+    setCaptchaInput(value)
+    if (captchaError) setCaptchaError('')
+  }
 
   const prepareEmail = (event) => {
     event.preventDefault()
+
+    // 1. Anti-spam Honeypot Check (catches automated bot scrapers/submitters)
+    if (honeypot) {
+      console.warn('Spam bot intercepted via honeypot field.')
+      setStatus('Pengiriman diblokir (terdeteksi aktivitas bot otomatis).')
+      return
+    }
+
+    // 2. Time-gate Check (prevent lightning-fast automated bot scripts)
+    const elapsed = Date.now() - formMountTime.current
+    if (elapsed < 1200) {
+      setCaptchaError('Pengisian terlalu cepat. Harap verifikasi kode.')
+      setStatus('Terdeteksi pengisian instan. Harap selesaikan kode CAPTCHA.')
+      setCaptchaCode(generateCaptchaCode())
+      setCaptchaInput('')
+      return
+    }
+
+    // 3. Captcha Validation Check
+    if (!captchaInput.trim()) {
+      setCaptchaError('Harap masukkan kode CAPTCHA di atas.')
+      setStatus('Selesaikan verifikasi anti-bot sebelum mengirim email.')
+      return
+    }
+
+    if (!isVerified) {
+      setCaptchaError('Kode CAPTCHA tidak cocok! Kode baru telah dibuat.')
+      setStatus('Verifikasi gagal. Coba masukkan kode baru yang muncul.')
+      setCaptchaCode(generateCaptchaCode())
+      setCaptchaInput('')
+      return
+    }
+
     const formData = new FormData(event.currentTarget)
     const subject = `Portfolio inquiry from ${formData.get('name')}`
     const body = `From: ${formData.get('name')}\nEmail: ${formData.get('email')}\n\n${formData.get('message')}`
     const mailto = `mailto:${developer.contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
 
     onAction()
-    setStatus('Your email draft is ready. Send it from your email app.')
+    setStatus('Verifikasi berhasil! Membuka draft email Anda...')
     window.location.href = mailto
+
+    // Refresh captcha for subsequent interactions
+    setTimeout(() => {
+      handleRefreshCaptcha()
+    }, 1200)
   }
 
   return (
@@ -1784,6 +1852,16 @@ function ContactSection({ onAction }) {
             <span>MESSAGE</span>
             <textarea name="message" placeholder="What's on your mind?" rows="4" required />
           </label>
+          <CaptchaBox
+            captchaCode={captchaCode}
+            userInput={captchaInput}
+            onChangeInput={handleCaptchaInputChange}
+            onRefresh={handleRefreshCaptcha}
+            isVerified={isVerified}
+            error={captchaError}
+            honeypotValue={honeypot}
+            onChangeHoneypot={setHoneypot}
+          />
           <div className="contact-submit-row">
             <button className="send-button" type="submit">
               SEND <span aria-hidden="true">&#8594;</span>

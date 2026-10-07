@@ -22,3 +22,23 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Playwright & Testing
+playwright.config.js
+/tes/
+/tests/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/
+.github/
+
+# Environment Variables & Local Configs
+.env
+.env.local
+.env.*.local
+
+# Cache & Coverage
+.vite/
+.eslintcache
+coverage/
