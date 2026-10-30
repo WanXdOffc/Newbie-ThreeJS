@@ -112,9 +112,9 @@ function LoadingScreen({ onComplete }) {
         resize()
 
         if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          const clock = new THREE.Clock()
-          const animate = () => {
-            const elapsed = clock.getElapsedTime()
+          const startTime = performance.now()
+          const animate = (currentTime) => {
+            const elapsed = (currentTime - startTime) / 1000
             model.rotation.y = elapsed * 0.42
             model.rotation.x = Math.sin(elapsed * 0.45) * 0.08
             model.position.y = Math.sin(elapsed * 0.8) * 0.06

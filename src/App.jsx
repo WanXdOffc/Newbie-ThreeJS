@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import { AnimatePresence, motion, MotionConfig, useMotionValue } from 'framer-motion'
 import CustomCursor from './CustomCursor'
 import LoadingScreen from './LoadingScreen'
@@ -707,7 +707,7 @@ function HomeBento({ onAction }) {
 
     const moveCar = (time) => {
       if (window.innerWidth < 768) {
-        frame = window.requestAnimationFrame(moveCar)
+        frame = null
         return
       }
       if (!previousTime) previousTime = time
@@ -720,8 +720,25 @@ function HomeBento({ onAction }) {
       frame = window.requestAnimationFrame(moveCar)
     }
 
-    frame = window.requestAnimationFrame(moveCar)
-    return () => window.cancelAnimationFrame(frame)
+    if (window.innerWidth >= 768) {
+      frame = window.requestAnimationFrame(moveCar)
+    }
+
+    const handleCarResize = () => {
+      if (window.innerWidth >= 768 && !frame) {
+        previousTime = 0
+        frame = window.requestAnimationFrame(moveCar)
+      } else if (window.innerWidth < 768 && frame) {
+        window.cancelAnimationFrame(frame)
+        frame = null
+      }
+    }
+    window.addEventListener('resize', handleCarResize)
+
+    return () => {
+      if (frame) window.cancelAnimationFrame(frame)
+      window.removeEventListener('resize', handleCarResize)
+    }
   }, [carOffset])
 
   useEffect(() => () => {
@@ -762,7 +779,16 @@ function HomeBento({ onAction }) {
 
         <div className="hero-portrait-wrap" onPointerLeave={() => { carHoverRef.current = false }}>
           <div className="hero-portrait-frame">
-            <img src={developer.profileImages[0]} alt={`${developer.name}, portrait`} />
+            <img
+              src={developer.profileImages[0]}
+              alt={`${developer.name}, portrait`}
+              onError={(e) => {
+                if (!e.currentTarget.dataset.fallback) {
+                  e.currentTarget.dataset.fallback = 'true'
+                  e.currentTarget.src = '/favicon.jpg'
+                }
+              }}
+            />
             <span className="portrait-corner portrait-corner-top" aria-hidden="true" />
             <span className="portrait-corner portrait-corner-bottom" aria-hidden="true" />
           </div>
@@ -859,6 +885,63 @@ function HomeBento({ onAction }) {
   )
 }
 
+function subscribeToMobile(callback) {
+  const mql = window.matchMedia('(max-width: 767px)')
+  mql.addEventListener('change', callback)
+  return () => mql.removeEventListener('change', callback)
+}
+
+function getMobileSnapshot() {
+  return window.innerWidth < 768
+}
+
+function getMobileServerSnapshot() {
+  return false
+}
+
+function useIsMobile() {
+  return useSyncExternalStore(subscribeToMobile, getMobileSnapshot, getMobileServerSnapshot)
+}
+
+function CertificateImage({ src, issuer, name, year }) {
+  const [failed, setFailed] = useState(false)
+  if (!src || failed) {
+    return (
+      <div className="certificate-cover-copy">
+        <span>{issuer}</span>
+        <strong>{name}</strong>
+        <small>{year}</small>
+      </div>
+    )
+  }
+  return <img src={src} alt="" loading="lazy" onError={() => setFailed(true)} />
+}
+
+function PolaroidImage({ src, alt, caption }) {
+  const [failed, setFailed] = useState(false)
+  if (!src || failed) {
+    return (
+      <div className="polaroid-fallback">
+        <span>{caption}</span>
+      </div>
+    )
+  }
+  return <img src={src} alt={alt} loading="lazy" onError={() => setFailed(true)} />
+}
+
+function ProjectImage({ src, title, category }) {
+  const [failed, setFailed] = useState(false)
+  if (!src || failed) {
+    return (
+      <div className="project-text-cover">
+        <span>{category}</span>
+        <strong>{title}</strong>
+      </div>
+    )
+  }
+  return <img src={src} alt={`${title} project preview`} loading="lazy" onError={() => setFailed(true)} />
+}
+
 function GithubActivityCard() {
   const [githubData, setGithubData] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -887,45 +970,50 @@ function GithubActivityCard() {
     return () => controller.abort()
   }, [])
 
-  const contributions = githubData?.activity.contributions ?? []
-  const weeks = []
-  contributions.forEach((day, index) => {
-    const weekIndex = Math.floor(index / 7)
-    weeks[weekIndex] ??= []
-    weeks[weekIndex].push(day)
-  })
+  const { weeks, stats } = useMemo(() => {
+    if (!githubData?.activity?.contributions) {
+      return { weeks: [], stats: [] }
+    }
+    const contributions = githubData.activity.contributions
+    const calculatedWeeks = []
+    contributions.forEach((day, index) => {
+      const weekIndex = Math.floor(index / 7)
+      calculatedWeeks[weekIndex] ??= []
+      calculatedWeeks[weekIndex].push(day)
+    })
 
-  if (weeks.length && weeks.at(-1).length < 7) {
-    weeks[weeks.length - 1].push(...Array.from({ length: 7 - weeks.at(-1).length }, (_, index) => ({
-      date: `empty-${index}`,
-      count: 0,
-      level: 0,
-    })))
-  }
+    if (calculatedWeeks.length && calculatedWeeks.at(-1).length < 7) {
+      calculatedWeeks[calculatedWeeks.length - 1].push(
+        ...Array.from({ length: 7 - calculatedWeeks.at(-1).length }, (_, index) => ({
+          date: `empty-${index}`,
+          count: 0,
+          level: 0,
+        }))
+      )
+    }
 
-  const productiveDays = contributions.filter(({ count }) => count > 0).length
-  let longestStreak = 0
-  let currentStreak = 0
-  contributions.forEach(({ count }) => {
-    currentStreak = count > 0 ? currentStreak + 1 : 0
-    longestStreak = Math.max(longestStreak, currentStreak)
-  })
+    const productiveDays = contributions.filter(({ count }) => count > 0).length
+    let longestStreak = 0
+    let currentStreak = 0
+    contributions.forEach(({ count }) => {
+      currentStreak = count > 0 ? currentStreak + 1 : 0
+      longestStreak = Math.max(longestStreak, currentStreak)
+    })
 
-  const stats = githubData ? [
-    { label: 'KONTRIBUSI / 1 TAHUN', value: githubData.activity.total.lastYear.toLocaleString('id-ID') },
-    { label: 'STREAK TERBAIK', value: `${longestStreak} HARI` },
-    { label: 'HARI PRODUKTIF', value: productiveDays },
-    { label: 'PUBLIC REPOSITORY', value: githubData.profile.public_repos },
-  ] : []
+    const calculatedStats = [
+      { label: 'KONTRIBUSI / 1 TAHUN', value: githubData.activity.total.lastYear.toLocaleString('id-ID') },
+      { label: 'STREAK TERBAIK', value: `${longestStreak} HARI` },
+      { label: 'HARI PRODUKTIF', value: productiveDays },
+      { label: 'PUBLIC REPOSITORY', value: githubData.profile.public_repos },
+    ]
+
+    return { weeks: calculatedWeeks, stats: calculatedStats }
+  }, [githubData])
 
   return (
-    <motion.section
+    <section
       className="github-card"
       aria-label={`Aktivitas GitHub @${developer.githubUsername}`}
-      initial={{ opacity: 0, x: 100 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ type: 'spring', stiffness: 78, damping: 20 }}
     >
       <div className="github-heading">
         <div className="github-profile-links">
@@ -988,11 +1076,12 @@ function GithubActivityCard() {
         {[0, 1, 2, 3, 4].map((level) => <span className={`activity-square activity-level-${level}`} key={level} />)}
         <span>BANYAK</span>
       </div>
-    </motion.section>
+    </section>
   )
 }
 
 function AboutSection({ onSelectDetail }) {
+  const isMobile = useIsMobile()
   const [showAllEducation, setShowAllEducation] = useState(false)
   const [showAllOrganizations, setShowAllOrganizations] = useState(false)
   const [showAllCertificates, setShowAllCertificates] = useState(false)
@@ -1042,10 +1131,10 @@ function AboutSection({ onSelectDetail }) {
 
         <motion.div
           className="about-github-reveal"
-          initial={{ opacity: 0, x: 100 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true, amount: 0.2 }}
-          transition={{ type: 'spring', stiffness: 78, damping: 20 }}
+          initial={isMobile ? { opacity: 0, y: 14 } : { opacity: 0, x: 100 }}
+          whileInView={isMobile ? { opacity: 1, y: 0 } : { opacity: 1, x: 0 }}
+          viewport={isMobile ? { once: true, amount: 0.05, margin: '80px 0px' } : { once: true, amount: 0.2 }}
+          transition={isMobile ? { duration: 0.35, ease: [0.22, 0.7, 0.2, 1] } : { type: 'spring', stiffness: 78, damping: 20 }}
         >
           <GithubActivityCard />
         </motion.div>
@@ -1227,11 +1316,12 @@ function AboutSection({ onSelectDetail }) {
             {certifications.slice(0, showAllCertificates ? certifications.length : 4).map((item, index) => (
               <motion.article className="certificate-card" key={item.id} initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} whileHover={{ y: -4 }} viewport={{ once: true, amount: 0.15 }} transition={{ duration: 0.2, delay: index * 0.04 }}>
                 <div className="certificate-art" aria-hidden="true">
-                  {(item.images?.[0] || item.image) ? (
-                    <img src={item.images?.[0] || item.image} alt="" loading="lazy" />
-                  ) : (
-                    <div className="certificate-cover-copy"><span>{item.issuer}</span><strong>{item.name}</strong><small>{item.year}</small></div>
-                  )}
+                  <CertificateImage
+                    src={item.images?.[0] || item.image}
+                    issuer={item.issuer}
+                    name={item.name}
+                    year={item.year}
+                  />
                 </div>
                 <span className="certificate-year">{item.year}</span>
                 <h4>{item.name}</h4>
@@ -1398,7 +1488,7 @@ function AlbumSection() {
           >
             <span className="polaroid-tape" aria-hidden="true" />
             <div className="polaroid-photo-frame">
-              <img src={photo.image} alt={photo.alt} loading="lazy" />
+              <PolaroidImage src={photo.image} alt={photo.alt} caption={photo.caption} />
             </div>
             <figcaption>
               <span>{photo.caption}</span>
@@ -1467,14 +1557,11 @@ function ProjectsSection({ onSelectProject, onAction }) {
               transition={{ duration: 0.18 }}
             >
               <div className="project-image-frame">
-                {project.images?.[0] || project.image ? (
-                  <img src={project.images?.[0] || project.image} alt={`${project.title} project preview`} loading="lazy" />
-                ) : (
-                  <div className="project-text-cover">
-                    <span>{project.category}</span>
-                    <strong>{project.title}</strong>
-                  </div>
-                )}
+                <ProjectImage
+                  src={project.images?.[0] || project.image}
+                  title={project.title}
+                  category={project.category}
+                />
                 <span className="project-category-badge">{project.category.split('/')[0].trim()}</span>
                 <span className="project-year">{project.category.split('/')[1]?.trim()}</span>
               </div>
