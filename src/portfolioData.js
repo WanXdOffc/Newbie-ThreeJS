@@ -19,6 +19,21 @@ export const developer = {
 
 export const projects = [
   {
+    id: 'ai-lost-and-found',
+    title: 'NODUS',
+    category: 'Website / 2026',
+    summary: 'A web-based platform that helps users find lost items using AI technology.',
+    description: 'NODUS is a web-based platform that helps users find lost items using AI technology. Users can report lost items, and the system will use AI algorithms to match the reported items with found items in the database.',
+    technologies: ['Laravel', 'Vue', 'Tailwind CSS', 'mySQL', 'Gemini AI', 'leaflet.js'],
+    images: [
+      'https://i.ibb.co.com/Mk7hgr61/Screenshot-2026-10-30-160634.png',
+      'https://i.ibb.co.com/chtZB4R3/image.png',
+      'https://i.ibb.co.com/bMy33LNH/image.png',
+    ],
+    repositoryUrl: 'https://github.com/WanXdOffc/NODUS',
+    liveUrl: 'https://nodus.wanyzx.dev/',
+  },
+  {
     id: 'my-blogg',
     title: 'Blog Pribadi',
     category: 'Website / 2026',
